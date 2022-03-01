@@ -13,7 +13,6 @@ export const getUser = async (user) => {
       return await fetch(`${basicUrl}/login`,options)
          .then(res => res.json())
    } catch (err) {
-
       console.log(err)
    }
 }

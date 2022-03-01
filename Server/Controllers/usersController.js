@@ -1,4 +1,5 @@
 const User = require('../Models/User');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 
@@ -27,7 +28,7 @@ const handleErrors = (err) => {
 
   let maxAge = 3 * 24 * 60 * 60; //3 days in a seconds |'3d'| '
 const createAccessToken = (id,role) => {
-    return jwt.sign({id,role},process.env.ACCESS_TOKEN_SECRET,{expiresIn : maxAge})
+    return jwt.sign({id,role},process.env.ACCESS_TOKEN_SECRET,{expiresIn : '30m'})
 }  
 
 let signupPost = async (req, res) => {
@@ -50,13 +51,21 @@ let signupPost = async (req, res) => {
 let loginPost = async (req, res) => {
      const { email,password } = req.body;
     try {
-      const user = await User.login({email,password})
-      if(user){
-        const token = createAccessToken(user._id,user.role);
-        res.cookie('JWT',token,{httpOnly: true,maxAge : maxAge * 1000})
-        res.status(201).json({user : {id : user._id,role : user.role,accessToken : token.ACCESS_TOKEN_SECRET }});
-      }
-  
+        const user = await User.findOne({email : email});
+        console.log(user);
+
+        if (user) {
+          const auth = bcrypt.compare(password, user.password);
+          if (auth) {
+              const token = createAccessToken(user._id,user.role);
+              res.cookie('JWT',token,{httpOnly: true,maxAge : maxAge * 1000})
+              res.status(201).json({user : {id : user._id,role : user.role,accessToken : token.ACCESS_TOKEN_SECRET }});
+            }
+            throw Error('Incorrect Password');
+
+          } else {
+          throw Error('Incorrect Email');
+        }
     } catch (error) {
       res.status(201).json({error : `${error}`});
     }

@@ -19,9 +19,8 @@ export default function Login() {
 
     await getUser({email,password})
     .then((data) => {
-      setAuth(data)
       setAuth(data._id,data.roles, data.accessToken);
-      if(data.accessToken){
+      if(data._id){
         navigate('/');
       }
       console.log(data);
