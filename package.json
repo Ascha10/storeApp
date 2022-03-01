@@ -11,7 +11,7 @@
     "start": "concurrently \"npm run setup\" \"npm run server\"",
     "server-dev": "nodemon server/server.js",
     "start-dev": "concurrently \"npm run server-dev\" \"npm run client\"",
-    "heruko-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+    "heruko-postbuild": "cd Client && npm install --only=dev && npm install && npm run build"
   },
   "author": "",
   "license": "ISC",
