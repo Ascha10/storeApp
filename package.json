@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "npm install && cd Client && npm start",
+    "client": "cd Client && npm start",
+    "server": "node Server/server.js",
+    "start": "concurrently \"npm run setup\" \"npm run server\"",
+    "server-dev": "nodemon server/server.js",
+    "start-dev": "concurrently \"npm run server-dev\" \"npm run client\"",
+    "heruko-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "concurrently": "^7.0.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.3",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
