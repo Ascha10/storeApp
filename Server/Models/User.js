@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema({
   isLogin : {
     type : Boolean,
     default : false
-  }
+  },
+  refreshToken: String
 },
   { timestamps: true }
 );
@@ -41,24 +42,6 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-
-// userSchema.statics.login = async (email, password){
-//   // const user =  User.findOne(user => user.email === email);
-//   const user = User.findOne({email})
-//   console.log(user);
-//   // console.log(user._conditions.email.email);
-//   // console.log(user._conditions.email.password);
-//   if (user) {
-//     const auth = await bcrypt.compare(password, user.password);
-//     if (auth) {
-//       return user;
-//     }
-//     throw Error('Incorrect Password');
-
-//   } else {
-//     throw Error('Incorrect Email');
-//   }
-// }
 
 const User = mongoose.model("User", userSchema);
 

@@ -19,13 +19,14 @@ export default function Login() {
 
     await getUser({email,password})
     .then((data) => {
-      setAuth(data._id,data.roles, data.accessToken);
-      if(data._id){
+      console.log(data);
+      if(data.accessToken){
+        // setAuth(data.user.id,data.user.roles, data.user.accessToken);
+        setAuth(data.user,data.role,data.accessToken);
         navigate('/');
       }
-      console.log(data);
-    })
-    .catch((err) => {
+
+    }).catch((err) => {
       console.log(err);
     })
 

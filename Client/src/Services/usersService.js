@@ -6,7 +6,8 @@ export const getUser = async (user) => {
    let options = {
       method: "POST",
       body: JSON.stringify(user),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      // credentials: 'include'
    }
 
    try {
