@@ -59,30 +59,50 @@ let loginPost = async (req, res) => {
 
         // Saving refreshToken with current user
         user.refreshToken = refreshToken;
+        user.isLogin = true;
         await user.save();
 
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
         return res.json({ accessToken});
-        
+
       }else{
           res.send({message : "Incorrect Password"}); /////do somthing 
       }
 
     } else {
-      // return res.json({"message" : "Incorrect Email"});
        res.send({message : "Incorrect Email"}); /////do somthing 
-
     }
   } catch (error) {
     return res.status(201).json({error});
   }
 }
 
-let logout = (req, res) => {
-  res.cookie('jwt', '', { maxAge: 1 });
-  // res.redirect('/');
-}
+let logout = async (req, res) => {
 
+    const cookies = req.cookies;
+    console.log(cookies);
+    if (!cookies?.jwt) return res.sendStatus(204); //No content
+    const refreshToken = cookies.jwt;
+    console.log(refreshToken);
+    // Is refreshToken in db?
+    // const foundUser = await User.findOne({ refreshToken }).exec();
+    const foundUser = await User.findOne({ refreshToken : refreshToken });
+    console.log(foundUser);
+
+    if (!foundUser) {
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+        return res.sendStatus(204);
+    }
+
+    // Delete refreshToken in db
+    foundUser.refreshToken = '';
+    foundUser.isLogin = false;
+    const result = await foundUser.save();
+    console.log(result);
+
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    res.sendStatus(204);
+}
 
 module.exports = {
   signupPost,

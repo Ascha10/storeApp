@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const shirtsRoutes = require('./Routes/Api/shirts'); 
-const usersRoutes = require('./Routes/Api/auth'); 
+const authRoutes = require('./Routes/Api/auth'); 
 const cookieParser = require('cookie-parser')
 const dbConnection = require('./DB/storeDB');
 const verifyJWT = require('./Middlewares/verifyJWT')
@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 // app.use(verifyJWT); // insted of in every route 
 app.use('/Api',shirtsRoutes);
-app.use('/Api',usersRoutes);
+app.use('/Api',authRoutes);
 
 //for validation..must be after route middelware
 // app.use((err,req,res,next) => {
