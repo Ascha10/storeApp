@@ -11,8 +11,9 @@ const verifyJWT = require('./Middlewares/verifyJWT')
 
 
 
-// app.use(cors({credentials : true,origin: "*",SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
-app.use(cors());
+// app.use(cors({credentials : true,origin: ['http://localhost:3000'],SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
+app.use(cors({credentials : true,origin: ['http://localhost:3000'],SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
+// app.use(cors());
 
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
@@ -35,11 +36,12 @@ if (process.env.NODE_ENV === 'production'){
     app.get('*',(req,res)=>{
         res.sendFile(path.join(__dirname, '../Client/build','index.html'))
     });
-} else {
-    app.get('/', (req,res) =>{
-        res.send("Api running")
-    })
 }
+// } else {
+//     app.get('/', (req,res) =>{
+//         res.send("Api running")
+//     })
+// }
 
 
 

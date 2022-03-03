@@ -6,8 +6,8 @@ export const getUser = async (user) => {
    let options = {
       method: "POST",
       body: JSON.stringify(user),
-      headers: { 'Content-Type': 'application/json'}//"Authentication": 'Bearer JWT'
-      // credentials: 'include'
+      headers: { 'Content-Type': 'application/json','Authentication': 'Bearer JWT'},//'Authentication': 'Bearer JWT'
+      credentials: 'include'
    }
 
    try {
