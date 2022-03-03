@@ -5,7 +5,7 @@ const {getShirts,getShirtById,addShirts,updateShirts,deleteShirts} = require('..
 
 router.get('/shirts',getShirts)
 
-router.get('/shirts/:id',getShirts)
+router.get('/shirts/:id',getShirtById)
 
 router.post('/shirts',addShirts)
 

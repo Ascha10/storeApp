@@ -6,13 +6,14 @@ export const getUser = async (user) => {
    let options = {
       method: "POST",
       body: JSON.stringify(user),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json'}//"Authentication": 'Bearer JWT'
       // credentials: 'include'
    }
 
    try {
       return await fetch(`${basicUrl}/login`,options)
          .then(res => res.json())
+         
    } catch (err) {
       console.log(err)
    }
@@ -28,7 +29,6 @@ export const addUser = async (user) => {
    try {
       return await fetch(`${basicUrl}/signup`, options)
          .then(res => res.json())
-         .then(data => {console.log(data)})
    } catch (err) {
       console.log(err);
    }

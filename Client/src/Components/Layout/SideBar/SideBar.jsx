@@ -12,7 +12,7 @@ export default function SideBar() {
           <Link to="/Shirts">Shirts</Link>
           <Link to="/SignUp">SignUp</Link>
           <Link to="/Login">Login</Link>
-          <button onClick={logout}>Logout</button>
+          <button onClick={() => logout()}>Logout</button>
       </nav>
       
   )

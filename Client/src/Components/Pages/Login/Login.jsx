@@ -22,7 +22,9 @@ export default function Login() {
       console.log(data);
       if(data.accessToken){
         // setAuth(data.user.id,data.user.roles, data.user.accessToken);
-        setAuth(data.user,data.role,data.accessToken);
+        // setAuth({email:data.email,role:data.role,accessToken :data.accessToken});
+        setAuth({accessToken : data.accessToken});
+        console.log(auth);
         navigate('/');
       }
 

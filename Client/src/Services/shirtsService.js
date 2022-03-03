@@ -1,8 +1,8 @@
-export let basicUrl = 'http://localhost:9000/api';
+export let basicUrl = process.env.NODE_ENV === 'production' ? 'https://store-app-x.herokuapp.com/api' :  'http://localhost:9000/api';
 
 export const getShirts = async () => {
    try {
-      return await fetch(`${basicUrl}/Shirts`)
+      return await fetch(`${basicUrl}/shirts`)//Authorization : 'Bearer '+res.cookie("jwt") 
          .then(res => res.json())
 
    } catch (error) {

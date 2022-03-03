@@ -35,12 +35,12 @@ const userSchema = new mongoose.Schema({
 );
 
 
-userSchema.pre('save', async function (next) {
-  // console.log('new User Is about To Be Add',this);
-  // const salt = await bcrypt.genSalt()
-  this.password = await bcrypt.hash(this.password, 10);
-  next()
-})
+// userSchema.pre('save', async function (next) {
+//   // console.log('new User Is about To Be Add',this);
+//   // const salt = await bcrypt.genSalt()
+//   this.password = await bcrypt.hash(this.password, 10);
+//   next()
+// })
 
 
 const User = mongoose.model("User", userSchema);

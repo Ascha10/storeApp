@@ -14,7 +14,7 @@ const useLogout = () => {
             await fetch(`${basicUrl}/logout`);
             navigate('/login');
         } catch (err) {
-            console.error(err);
+            console.log(err);
         }
     }
 

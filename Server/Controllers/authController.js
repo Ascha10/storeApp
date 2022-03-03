@@ -31,10 +31,21 @@ let signupPost = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.create({ email, password })
-    // const token = createAccessToken(user._id, user.role);
-    // res.cookie('JWT', token, { httpOnly: true, maxAge: maxAge * 1000 })
-    res.status(201).json(user);
+    // const user = await User.create({ email, password })
+    
+    // const accessToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role}},process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '15m' });
+    const hashedPwd = await bcrypt.hash(password, 10);
+
+    //create and store the new user
+    const user = await User.create({email, password : hashedPwd});
+    return res.status(201).json(user);
+
+    // user.isLogin = true;
+    // await user.save();
+  
+    // // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+    // res.cookie('jwt', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+    // return res.json({ accessToken});
 
   } catch (err) {
     console.log(err);
@@ -51,26 +62,27 @@ let loginPost = async (req, res) => {
     console.log(user);
 
     if (user) {
-      const match = await bcrypt.compare(password,user.password);
-      if (match) {
-
-        const accessToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role}},process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '10m' });
-        const refreshToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role }},process.env.REFRESH_TOKEN_SECRET,{ expiresIn: '1d' });
-
-        // Saving refreshToken with current user
-        user.refreshToken = refreshToken;
-        user.isLogin = true;
-        await user.save();
-
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
-        return res.json({ accessToken});
-
-      }else{
-          res.send({message : "Incorrect Password"}); /////do somthing 
-      }
+          const match = await bcrypt.compare(password,user.password);
+          if (match) {
+          
+            const accessToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role}},process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '1H' });
+            // const refreshToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role }},process.env.REFRESH_TOKEN_SECRET,{ expiresIn: '1d' });
+          
+            // Saving refreshToken with current user
+            // user.refreshToken = refreshToken;
+            user.isLogin = true;
+            await user.save();
+          
+            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+            res.cookie('jwt', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+            return res.json({ accessToken});
+          
+          }else{
+             return res.send({message : "Incorrect Password"}); 
+          }
 
     } else {
-       res.send({message : "Incorrect Email"}); /////do somthing 
+      return res.send({message : "Incorrect Email"});
     }
   } catch (error) {
     return res.status(201).json({error});
@@ -82,20 +94,20 @@ let logout = async (req, res) => {
     const cookies = req.cookies;
     console.log(cookies);
     if (!cookies?.jwt) return res.sendStatus(204); //No content
-    const refreshToken = cookies.jwt;
-    console.log(refreshToken);
+    // const refreshToken = cookies.jwt;
+    // console.log(refreshToken);
     // Is refreshToken in db?
     // const foundUser = await User.findOne({ refreshToken }).exec();
-    const foundUser = await User.findOne({ refreshToken : refreshToken });
-    console.log(foundUser);
+    // const foundUser = await User.findOne({ refreshToken : refreshToken });
+    // console.log(foundUser);
 
-    if (!foundUser) {
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-        return res.sendStatus(204);
-    }
+    // if (!foundUser) {
+    //     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    //     return res.sendStatus(204);
+    // }
 
     // Delete refreshToken in db
-    foundUser.refreshToken = '';
+    // foundUser.refreshToken = '';
     foundUser.isLogin = false;
     const result = await foundUser.save();
     console.log(result);
