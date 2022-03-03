@@ -1,17 +1,17 @@
 import { useState,useContext } from 'react'
 import { addUser } from '../../../Services/usersService';
-// import { authContext } from '../../../Context/AuthProvider/AuthProvider';
-// import { useNavigate } from 'react-router-dom';
+import { authContext } from '../../../Context/AuthProvider/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SignUp() {
 
-    // const {auth,setAuth} = useContext(authContext);
+    const {auth,setAuth} = useContext(authContext);
 
     let [email,setEmail] = useState("");
     let [password,setPassword] = useState("");
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
 
     let submitForm = async (e) => {
@@ -21,7 +21,18 @@ export default function SignUp() {
         await addUser({email,password})
         .then((data) => {
             console.log(data);
-        })
+
+            if(data.accessToken){
+              // setAuth(data.user.id,data.user.roles, data.user.accessToken);
+              setAuth({email:data.email,role:data.role,accessToken :data.accessToken});
+              console.log(auth);
+            //   console.log(result);
+              navigate('/');
+            }
+        }).catch((err) => {
+                console.log(err);
+            })
+            
             // if(data.accessToken){
             //   // setAuth(data.user.id,data.user.roles, data.user.accessToken);
             //   setAuth({email:data.email,role:data.role,accessToken :data.accessToken});

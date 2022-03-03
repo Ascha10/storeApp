@@ -31,21 +31,20 @@ let signupPost = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // const user = await User.create({ email, password })
     
-    // const accessToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role}},process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '15m' });
     const hashedPwd = await bcrypt.hash(password, 10);
-
     //create and store the new user
     const user = await User.create({email, password : hashedPwd});
-    return res.status(201).json(user);
+    user.isLogin = true;
+    await user.save();
 
-    // user.isLogin = true;
-    // await user.save();
-  
-    // // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
-    // res.cookie('jwt', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
-    // return res.json({ accessToken});
+    const accessToken = jwt.sign({"userInfo": {"email": user.email,"role": user.role}},process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '15m' });
+        // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+    res.cookie('JWT', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+
+    res.json({ accessToken});
+
+    return res.status(201).send(user);
 
   } catch (err) {
     console.log(err);
@@ -73,8 +72,8 @@ let loginPost = async (req, res) => {
             user.isLogin = true;
             await user.save();
           
-            // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
-            res.cookie('jwt', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+            // res.cookie('JWT', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
+            res.cookie('JWT', accessToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 ,secure: true }); 
             return res.json({ accessToken});
           
           }else{
@@ -93,8 +92,8 @@ let logout = async (req, res) => {
 
     const cookies = req.cookies;
     console.log(cookies);
-    if (!cookies?.jwt) return res.sendStatus(204); //No content
-    // const refreshToken = cookies.jwt;
+    if (!cookies?.JWT) return res.sendStatus(204); //No content
+    // const refreshToken = cookies.JWT;
     // console.log(refreshToken);
     // Is refreshToken in db?
     // const foundUser = await User.findOne({ refreshToken }).exec();
@@ -102,7 +101,7 @@ let logout = async (req, res) => {
     // console.log(foundUser);
 
     // if (!foundUser) {
-    //     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    //     res.clearCookie('JWT', { httpOnly: true, sameSite: 'None', secure: true });
     //     return res.sendStatus(204);
     // }
 
@@ -112,7 +111,7 @@ let logout = async (req, res) => {
     const result = await foundUser.save();
     console.log(result);
 
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    res.clearCookie('JWT', { httpOnly: true, sameSite: 'None', secure: true });
     res.sendStatus(204);
 }
 

@@ -12,8 +12,8 @@ const verifyJWT = require('./Middlewares/verifyJWT')
 
 
 // app.use(cors({credentials : true,origin: ['http://localhost:3000'],SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
-app.use(cors({credentials : true,origin: ['http://localhost:3000'],SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
-// app.use(cors());
+// app.use(cors({credentials : true,origin: ['http://localhost:3000'],SupportsCredentials : true,allowedHeaders : ['GET', 'POST', 'PUT', 'DELETE']}));
+app.use(cors());
 
 // built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
