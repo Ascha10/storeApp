@@ -7,7 +7,7 @@ const dbConnection = require('./DB/storeDB');
 const path = require('path')
 const shirtsRoutes = require('./Routes/Api/shirts'); 
 const authRoutes = require('./Routes/Api/auth'); 
-const verifyJWT = require('./Middlewares/verifyJWT')
+// const verifyJWT = require('./Middlewares/verifyJWT')
 
 
 
@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 
 app.use('/Api',authRoutes);
-app.use(verifyJWT); // insted of in every route 
+// app.use(verifyJWT); // insted of in every route 
 app.use('/Api',shirtsRoutes);
 
 //for validation..must be after route middelware
